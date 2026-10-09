@@ -1,0 +1,6 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Runtime configuration (machine-specific paths)
+unezquake_installer_config.json
