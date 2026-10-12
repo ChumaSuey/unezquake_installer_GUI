@@ -1,8 +1,9 @@
 # Settings Guide
 
 The installer keeps its configuration in `unezquake_installer_config.json`
-(next to the scripts). You can change everything from the **⚙️ Settings**
-dialog, or edit the file directly.
+(next to the scripts, or next to the `.exe` when running the built executable).
+You can change everything from the **⚙️ Settings** dialog, or edit the file
+directly.
 
 ## What you can configure
 
@@ -105,7 +106,7 @@ Detection is only a suggestion — browse to set your real paths.
 ```json
 {
   "game_dir": "/home/user/Games/Quake/unezquake",
-  "install_dir": "/home/user/Games/Quake",
+  "install_dir": "/games/quake",
   "repo_url": "https://github.com/dusty-qw/unezquake.git",
   "theme": "dark"
 }
@@ -134,7 +135,9 @@ each other, and point Build source at a dedicated `…/unezquake` folder.
 - **"… parent does not exist yet" warning** — not an error: the settings are
   saved and the folder is created when you run **Update**.
 - **Settings not saving** — check that you can write
-  `unezquake_installer_config.json` in the app folder.
+  `unezquake_installer_config.json` in the app folder. When running the built
+  `.exe`, the config is written **next to the executable**, so run it from a
+  writable folder (not `C:\Program Files`).
 - **Wrong detected directories** — detection is a hint only; use Browse.
 - **Theme looks plain/light** — install the theme package: `pip install sv-ttk`,
   then restart the app (or re-save Settings).

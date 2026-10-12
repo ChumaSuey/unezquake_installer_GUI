@@ -4,3 +4,8 @@ __pycache__/
 
 # Runtime configuration (machine-specific paths)
 unezquake_installer_config.json
+
+# PyInstaller build artifacts
+build/
+dist/
+*.spec

@@ -471,6 +471,41 @@ Verified (offline, since this sandbox blocks Python HTTPS to GitHub):
 Not done / open: Linux release download (build remains the only Linux path);
 checksum/signature verification (FORKS' releases publish no checksums.txt).
 
+---
+
+## 2026-10-12 — Packaging: standalone Windows executable
+
+Built a single-file Windows executable with PyInstaller 6.18.0 / Python 3.13.
+
+Code (`backend.py`):
+- Frozen-aware config path — `CONFIG_FILE`/`THEME_DIR` now use `APP_DIR`, which
+  is `Path(sys.executable).parent` when `sys.frozen` is set, otherwise
+  `Path(__file__).parent`. Previously a onefile build wrote the config into the
+  temporary `_MEIPASS` extraction folder, so saved settings were lost on exit.
+
+Build:
+- `python -m PyInstaller --noconfirm --clean --onefile --windowed
+  --name UnezquakeInstaller --collect-all sv_ttk --collect-all darkdetect main.py`
+- `--collect-all sv_ttk` is required: PyInstaller does not auto-bundle the Sun
+  Valley `.tcl`/PNG theme data, so the app would silently fall back to a plain
+  theme. `--windowed` hides the console. Output: `dist\UnezquakeInstaller.exe`
+  (~10.7 MB).
+- Verified: the exe launches and stays running (smoke test), onefile start is
+  slower due to temp extraction.
+
+Docs / hygiene:
+- README gained an **Instructions** section (run from source, build the exe,
+  notes to take into account); config-location wording corrected for the frozen
+  case; project-structure list completed; `install_dir` example aligned with the
+  `/games/quake` default; check-version verdict wording matched to the GUI.
+- SETTINGS_GUIDE: config-location wording + writable-folder troubleshooting.
+- `.gitignore`: added `build/`, `dist/`, `*.spec`.
+
+Note: the 2026-10-05 line "Check version button is still a placeholder" is stale
+— the button was implemented on 2026-10-09 and is labelled "🏷️ Check Version"
+(earlier worklog entries say "Check GH version").
+
+
 
 
 

@@ -11,15 +11,19 @@ live console, progress bar, and an editable configuration.
 
 ```
 unezquake-installer/
-├── main.py         Entry point — run this to start the app
-├── backend.py      All build/install logic (no GUI dependencies)
-├── GUI.py          All tkinter/ttk UI code
-├── worklog.md      Development log
-└── README.md       This file
+├── main.py             Entry point — run this to start the app
+├── backend.py          All build/install logic (no GUI dependencies)
+├── GUI.py              All tkinter/ttk UI code
+├── README.md           This file — setup and usage
+├── SETTINGS_GUIDE.md   Detailed settings / detection guide
+├── PROJECT_SUMMARY.md  Short architecture overview
+├── projectnotes.md     Concepts not yet implemented
+└── worklog.md          Development log
 ```
 
-`unezquake_installer_config.json` is created next to these files the first time
-you save settings.
+`unezquake_installer_config.json` is created next to the script on first save —
+or **next to the executable** when running the built `.exe` (see
+[Executable](#building-a-standalone-executable-exe)).
 
 ## Requirements
 
@@ -32,15 +36,65 @@ you save settings.
   ```bash
   pip install darkdetect
   ```
+- **`pyinstaller`** (optional, build-only) — only needed to produce the standalone
+  `.exe`:
+  ```bash
+  pip install pyinstaller
+  ```
 - For the actual build (Linux only):
   - **git**, **gcc**, **cmake**, **make** (SDL2 and other build dependencies are
     handled by unezquake's own build script)
 
-## Quick start
+## Instructions
 
-```bash
-python main.py
+### Run from source
+
+1. Install the optional dependencies (recommended):
+   ```bash
+   pip install sv-ttk darkdetect
+   ```
+2. Start the app:
+   ```bash
+   python main.py
+   ```
+3. Click **🔄 Update** to install/update the client, or **🏷️ Check Version** to
+   compare the installed build against the latest GitHub release. Configure
+   folders, theme and detection under **⚙️ Settings** (see
+   [SETTINGS_GUIDE.md](SETTINGS_GUIDE.md)).
+
+### Building a standalone executable (`.exe`)
+
+Windows one-file build (produces `dist\UnezquakeInstaller.exe`):
+
+```powershell
+python -m PyInstaller --noconfirm --clean --onefile --windowed `
+  --name UnezquakeInstaller --collect-all sv_ttk --collect-all darkdetect main.py
 ```
+
+Notes:
+
+- `--collect-all sv_ttk` (and `darkdetect`) is required — PyInstaller does not
+  automatically bundle the Sun Valley `.tcl` theme files and PNG sprites, and the
+  app would fall back to a plain theme without them.
+- `--onefile` packs everything into a single self-contained `.exe` (~11 MB) that
+  is easy to share, at the cost of a slower first start (it unpacks to a temp
+  folder each launch). Use `--onedir` instead if you prefer faster startup.
+- `--windowed` hides the console window (no black terminal behind the GUI).
+- There is **no custom icon** yet; the build uses PyInstaller's default.
+- Run the `.exe` from a **writable folder** — the config is written next to it
+  (see [Configuration](#configuration)).
+
+### Notes to take into account
+
+- **Update** is platform-aware: **Linux** builds from source (needs `git`,
+  `gcc`, `cmake`, `make`); **Windows/macOS** download the prebuilt release
+  (no toolchain). Any other platform can still configure directories but cannot
+  install.
+- The version check and release download use the GitHub API anonymously, which
+  is rate-limited; a `403` is reported as a rate-limit error.
+- When running the built `.exe`, the config lives **next to the executable**; if
+  that folder is read-only (e.g. `C:\Program Files`), settings cannot be saved.
+- The `dist/`, `build/` and `*.spec` build artifacts are git-ignored.
 
 ## Platform support
 
@@ -79,8 +133,9 @@ mid-update asks first and stops it.
   (`releases/latest`) and reports the latest tag, name, and release date
 - Reads the version embedded in the installed `unezquake` executable (or
   `src/version.h` when the source tree is available) and compares it
-- Verdict: **Update available** (`2.0.5 → 2.1`), **up to date**, or **latest
-  version unknown** — with the release URL for a manual download
+- Verdict: **Update available** (`2.0.5 → 2.1`), **up to date**, or — when the
+  installed version can't be read — the latest tag with a note to download
+  manually from GitHub
 - Runs in a background thread; network calls never block the UI
 
 ### Console output
@@ -115,12 +170,14 @@ mid-update asks first and stops it.
 
 ## Configuration
 
-Settings are stored in `unezquake_installer_config.json`:
+Settings are stored in `unezquake_installer_config.json` — next to the script,
+or next to the `.exe` when running the built executable. The stock defaults
+(`backend.py`) are shown below:
 
 ```json
 {
   "game_dir": "/home/user/Games/Quake/unezquake",
-  "install_dir": "/home/user/Games/Quake",
+  "install_dir": "/games/quake",
   "repo_url": "https://github.com/dusty-qw/unezquake.git",
   "theme": "dark"
 }
@@ -133,7 +190,9 @@ Settings are stored in `unezquake_installer_config.json`:
 | `repo_url`    | Git repository to build from                         |
 | `theme`       | `dark` (default), `light`, or `system`               |
 
-You can also edit defaults in `backend.py`.
+You can also edit defaults in `backend.py` (`DEFAULT_GAME_DIR`,
+`DEFAULT_INSTALL_DIR`). Note `install_dir` defaults to `/games/quake`, which is
+meaningless on Windows — set your real Quake folder under **Settings**.
 
 ## Theme
 

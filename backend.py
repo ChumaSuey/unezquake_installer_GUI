@@ -44,8 +44,15 @@ DEFAULT_THEME = "dark"
 CATEGORY_QW = "qw"
 CATEGORY_OTHER = "other"
 
-CONFIG_FILE = Path(__file__).parent.resolve() / "unezquake_installer_config.json"
-THEME_DIR = Path(__file__).parent.resolve() / "sun-valley.ttk"
+if getattr(sys, "frozen", False):
+    # Running from a PyInstaller bundle: keep the config next to the executable
+    # instead of the (temporary, read-only) extraction folder.
+    APP_DIR = Path(sys.executable).parent.resolve()
+else:
+    APP_DIR = Path(__file__).parent.resolve()
+
+CONFIG_FILE = APP_DIR / "unezquake_installer_config.json"
+THEME_DIR = APP_DIR / "sun-valley.ttk"
 
 BUILD_TOOLS = ("git", "gcc", "cmake", "make")
 
