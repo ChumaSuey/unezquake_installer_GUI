@@ -7,6 +7,16 @@ QuakeWorld client, built with **tkinter + ttk** and the
 The app downloads the repository, builds it, and installs the binary — with a
 live console, progress bar, and an editable configuration.
 
+## Pictures of the app
+
+<img width="877" height="790" alt="image" src="https://github.com/user-attachments/assets/77d5a735-3e77-4692-a6ca-cc25c6afef51" />
+
+<img width="877" height="790" alt="image" src="https://github.com/user-attachments/assets/52a05f42-0617-40e0-8091-31dd0b6511b4" />
+
+<img width="678" height="877" alt="image" src="https://github.com/user-attachments/assets/c7380581-4f90-4fc8-9984-c2184a6ea4a3" />
+
+
+
 ## Project structure
 
 ```
